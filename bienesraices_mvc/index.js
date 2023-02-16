@@ -5,10 +5,14 @@ import db from "./config/db.js";
 // Crear la app.
 const app = express();
 
+// Habilitar lectura de datos de formularios.
+app.use(express.urlencoded({ extended: true }));
+
 // Conexion a la DB.
 try {
   await db.authenticate();
-  console.log("Conexion Correcta");
+  db.sync();
+  console.log("La Conexión Con la DB Es Correcta");
 } catch (error) {
   console.log(error);
 }
