@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
 
 const generarJWT = (datos) =>
-  jwt.sigh(
+  jwt.sign(
     {
       id: datos.id,
       nombre: datos.nombre,

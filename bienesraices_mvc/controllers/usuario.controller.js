@@ -69,7 +69,7 @@ const autenticar = async (req, res) => {
       httpOnly: true, // Hace que no puedan ver el token.
       // secure: true // Solo funciona si es un "https" // Certificado SSL.
     })
-    .redirect("/mis-propiedades");
+    .redirect("/propiedades/mis-propiedades");
 };
 
 const formularioOlvidePassword = (req, res) => {
