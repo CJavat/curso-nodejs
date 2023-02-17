@@ -1,7 +1,7 @@
 import { check, validationResult } from "express-validator";
 import Usuario from "../models/usuario.model.js";
 import { generarId } from "../helpers/tokens.js";
-import { emailRegistro } from "../helpers/emails.js";
+import { emailRegistro, emailOlvidePassword } from "../helpers/emails.js";
 
 const formularioLogin = (req, res) => {
   res.render("auth/login", {
@@ -9,16 +9,70 @@ const formularioLogin = (req, res) => {
   });
 };
 
-const formularioRegistro = (req, res) => {
-  res.render("auth/registro", {
-    pagina: "Crear Cuenta",
+const formularioOlvidePassword = (req, res) => {
+  res.render("auth/olvide-password", {
+    pagina: "Recupera tu acceso a BienesRaices",
     csrfToken: req.csrfToken(),
   });
 };
 
-const formularioOlvidePassword = (req, res) => {
-  res.render("auth/olvide-password", {
-    pagina: "Recupera tu acceso a BienesRaices",
+const resetPassword = async (req, res) => {
+  // Validación.
+  await check("email").isEmail().withMessage("El email no es válido.").run(req);
+  let resultado = validationResult(req);
+
+  // Verificar que el resultado esté vacío.
+  if (!resultado.isEmpty()) {
+    // Errores.
+    return res.render("auth/olvide-password", {
+      pagina: "Recupera tu acceso a BienesRaices",
+      csrfToken: req.csrfToken(),
+      errores: resultado.array(),
+    });
+  }
+
+  // Buscar Usuario.
+  const { email } = req.body;
+  const usuario = await Usuario.findOne({ where: { email } });
+
+  if (!usuario) {
+    // Errores.
+    return res.render("auth/registro", {
+      pagina: "Crear Cuenta",
+      errores: "El email no pertenece a ningun usuario.",
+      csrfToken: req.csrfToken(),
+    });
+  }
+
+  // Generar un token y enviar el email.
+  usuario.token = generarId();
+  await usuario.save();
+
+  // Enviar un email.
+  emailOlvidePassword({
+    email: usuario.email,
+    nombre: usuario.nombre,
+    token: usuario.token,
+  });
+
+  // Renderizar un mensaje.
+  res.render("templates/mensaje", {
+    pagina: "Reestablece tu Password",
+    mensaje: "Te hemos enviado un email con las instrucciones.",
+  });
+};
+
+const comprobarToken = (req, res, next) => {
+  next();
+};
+const nuevoPassword = (req, res, next) => {
+  next();
+};
+
+const formularioRegistro = (req, res) => {
+  res.render("auth/registro", {
+    pagina: "Crear Cuenta",
+    csrfToken: req.csrfToken(),
   });
 };
 
@@ -53,6 +107,7 @@ const registrar = async (req, res) => {
       },
     });
   }
+
   // Extraer los datos.
   const { nombre, email, password } = req.body;
 
@@ -127,4 +182,7 @@ export {
   formularioOlvidePassword,
   registrar,
   confirmar,
+  resetPassword,
+  nuevoPassword,
+  comprobarToken,
 };
