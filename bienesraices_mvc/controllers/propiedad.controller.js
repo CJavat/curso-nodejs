@@ -30,7 +30,7 @@ const guardar = async (req, res) => {
   // Validacion.
   let resultado = validationResult(req);
 
-  if (resultado.isEmpty()) {
+  if (!resultado.isEmpty()) {
     // Consultar modelo de precio y categorias.
     const [categorias, precios] = await Promise.all([
       Categoria.findAll(),
@@ -43,10 +43,9 @@ const guardar = async (req, res) => {
       csrfToken: req.csrfToken(),
       categorias,
       precios,
-      //errores: resultado.array(),
+      errores: resultado.array(),
     });
   }
-  console.log("hola");
 };
 
 export { admin, crear, guardar };
