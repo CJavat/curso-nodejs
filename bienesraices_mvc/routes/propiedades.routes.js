@@ -3,11 +3,13 @@ const router = express.Router();
 
 import { body } from "express-validator";
 import { admin, crear, guardar } from "../controllers/propiedad.controller.js";
+import protegerRuta from "../middleware/protegerRuta.js";
 
-router.get("/mis-propiedades", admin);
-router.get("/crear", crear);
+router.get("/mis-propiedades", protegerRuta, admin);
+router.get("/crear", protegerRuta, crear);
 router.post(
   "/crear",
+  protegerRuta,
   body("titulo")
     .notEmpty()
     .withMessage("El titulo del anuncio es obligatorio."),
