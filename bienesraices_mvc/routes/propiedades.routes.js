@@ -10,6 +10,7 @@ import {
   almacenarImagen,
   editar,
   guardarCambios,
+  eliminar,
 } from "../controllers/propiedad.controller.js";
 
 import protegerRuta from "../middleware/protegerRuta.js";
@@ -75,5 +76,7 @@ router.post(
   body("lat").notEmpty().withMessage("Hubica la propiedad en el mapa."),
   guardarCambios
 );
+
+router.post("/eliminar/:id", protegerRuta, eliminar);
 
 export default router;
