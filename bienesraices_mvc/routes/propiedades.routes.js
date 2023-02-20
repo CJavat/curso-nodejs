@@ -11,6 +11,7 @@ import {
   editar,
   guardarCambios,
   eliminar,
+  mostrarPropiedad,
 } from "../controllers/propiedad.controller.js";
 
 import protegerRuta from "../middleware/protegerRuta.js";
@@ -78,5 +79,8 @@ router.post(
 );
 
 router.post("/eliminar/:id", protegerRuta, eliminar);
+
+// Area publica.
+router.get("/propiedad/:id", mostrarPropiedad);
 
 export default router;
