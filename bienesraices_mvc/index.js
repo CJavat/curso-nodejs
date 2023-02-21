@@ -41,6 +41,11 @@ app.use("/auth", usuarioRoutes);
 app.use("/propiedades", propiedadesRoutes);
 app.use("/api", apiRoutes);
 
+// Validar que cualquier ruta que se escriba y no exista.
+app.get("*", (req, res) => {
+  res.redirect("/404");
+});
+
 // Definir un puerto y arrancar el proyecto.
 const port = process.env.PORT || 3000;
 
