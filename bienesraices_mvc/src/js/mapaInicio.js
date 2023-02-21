@@ -5,6 +5,8 @@
 
   let markers = new L.FeatureGroup().addTo(mapa);
 
+  let propiedades = [];
+
   // Filtros
   const filtros = {
     categoria: "",
@@ -21,18 +23,21 @@
 
   // Filtrado de categorias y precios.
   categoriasSelect.addEventListener("change", (e) => {
-    filtros.categoria = +e.terget.value;
+    filtros.categoria = +e.target.value;
+    filtrarPropiedades();
   });
 
   preciosSelect.addEventListener("change", (e) => {
-    filtros.precio = +e.terget.value;
+    filtros.precio = +e.target.value;
+    filtrarPropiedades();
   });
 
   const obtenerPropiedades = async () => {
     try {
       const url = "/api/propiedades";
       const respuesta = await fetch(url);
-      const propiedades = await respuesta.json();
+      propiedades = await respuesta.json();
+
       mostrarPropiedades(propiedades);
     } catch (error) {
       console.log(error);
@@ -40,6 +45,9 @@
   };
 
   const mostrarPropiedades = (propiedades) => {
+    // Liimpiar los markers previos.
+    markers.clearLayers();
+
     propiedades.forEach((propiedad) => {
       // Agregar los pines.
       const marker = new L.marker([propiedad?.lat, propiedad?.lng], {
@@ -57,6 +65,24 @@
 
       markers.addLayer(marker);
     });
+  };
+
+  const filtrarPropiedades = () => {
+    const resultado = propiedades
+      .filter(filtrarCategoria)
+      .filter(filtrarPrecio);
+
+    mostrarPropiedades(resultado);
+  };
+
+  const filtrarCategoria = (propiedad) => {
+    return filtros.categoria
+      ? propiedad.categoriaId === filtros.categoria
+      : propiedad;
+  };
+
+  const filtrarPrecio = (propiedad) => {
+    return filtros.precio ? propiedad.precioId === filtros.precio : propiedad;
   };
 
   obtenerPropiedades();
