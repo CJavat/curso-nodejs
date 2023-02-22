@@ -316,7 +316,27 @@ const eliminar = async (req, res) => {
 
 // Modifica el estado de la propiedad.
 const cambiarEstado = async (req, res) => {
-  console.log("cambiando estado...");
+  const { id } = req.params;
+
+  // Validar que la propiedad exista.
+  const propiedad = await Propiedad.findByPk(id);
+  if (!propiedad) {
+    return res.redirect("propiedades/mis-propiedades");
+  }
+
+  // Revisas que quien visita la URL, es quien creo la propiedad.
+  if (propiedad.usuarioId.toString() !== req.usuario.id.toString()) {
+    return res.redirect("propiedades/mis-propiedades");
+  }
+
+  // Actualizar.
+  propiedad.publicado = !propiedad.publicado;
+
+  await propiedad.save();
+
+  res.json({
+    resultado: "ok",
+  });
 };
 
 // Muestra una propiedad.
@@ -330,7 +350,7 @@ const mostrarPropiedad = async (req, res, next) => {
       { model: Categoria, as: "categoria" },
     ],
   });
-  if (!propiedad) {
+  if (!propiedad || !propiedad.publicado) {
     return res.redirect("/404");
   }
   esVendedor(req.usuario?.id, propiedad.usuarioId);

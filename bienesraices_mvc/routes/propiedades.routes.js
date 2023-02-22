@@ -84,7 +84,7 @@ router.post(
 
 router.post("/eliminar/:id", protegerRuta, eliminar);
 
-router.put("/propiedades/:id", protegerRuta, cambiarEstado);
+router.put("/:id", protegerRuta, cambiarEstado);
 
 // Area publica.
 router.get("/propiedad/:id", identificarUsuario, mostrarPropiedad);
