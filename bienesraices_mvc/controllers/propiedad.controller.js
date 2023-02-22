@@ -314,6 +314,11 @@ const eliminar = async (req, res) => {
   res.redirect("/propiedades/mis-propiedades");
 };
 
+// Modifica el estado de la propiedad.
+const cambiarEstado = async (req, res) => {
+  console.log("cambiando estado...");
+};
+
 // Muestra una propiedad.
 const mostrarPropiedad = async (req, res, next) => {
   const { id } = req.params;
@@ -431,4 +436,5 @@ export {
   mostrarPropiedad,
   enviarMensaje,
   verMensajes,
+  cambiarEstado,
 };
