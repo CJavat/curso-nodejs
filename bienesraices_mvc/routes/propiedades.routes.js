@@ -16,6 +16,7 @@ import {
 
 import protegerRuta from "../middleware/protegerRuta.js";
 import upload from "../middleware/subirImage.js";
+import identificarUsuario from "../middleware/identificarUsuario.js";
 
 router.get("/mis-propiedades", protegerRuta, admin);
 router.get("/crear", protegerRuta, crear);
@@ -81,6 +82,6 @@ router.post(
 router.post("/eliminar/:id", protegerRuta, eliminar);
 
 // Area publica.
-router.get("/propiedad/:id", mostrarPropiedad);
+router.get("/propiedad/:id", identificarUsuario, mostrarPropiedad);
 
 export default router;
