@@ -72,6 +72,10 @@ const autenticar = async (req, res) => {
     .redirect("/propiedades/mis-propiedades");
 };
 
+const cerrarSesion = (req, res) => {
+  return res.clearCookie("_token").status(200).redirect("/auth/login");
+};
+
 const formularioOlvidePassword = (req, res) => {
   res.render("auth/olvide-password", {
     pagina: "Recupera tu acceso a BienesRaices",
@@ -289,6 +293,8 @@ const confirmar = async (req, res, next) => {
 
 export {
   formularioLogin,
+  autenticar,
+  cerrarSesion,
   formularioRegistro,
   formularioOlvidePassword,
   registrar,
@@ -296,5 +302,4 @@ export {
   resetPassword,
   nuevoPassword,
   comprobarToken,
-  autenticar,
 };
