@@ -1,8 +1,11 @@
 const mongoose = require("mongoose");
 require("./config/db");
-
 const express = require("express");
+const handlebars = require("handlebars");
 const exphbs = require("express-handlebars");
+const {
+  allowInsecurePrototypeAccess,
+} = require("@handlebars/allow-prototype-access");
 const path = require("path");
 const router = require("./routes/index.routes");
 const cookieParser = require("cookie-parser");
@@ -22,10 +25,12 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.engine(
   "handlebars",
   exphbs.engine({
+    handlebars: allowInsecurePrototypeAccess(handlebars),
     defaultLayout: "layout",
     helpers: require("./helpers/handlebars"),
   })
 );
+
 app.set("view engine", "handlebars");
 
 // Static Files.
