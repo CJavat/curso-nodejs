@@ -3,6 +3,7 @@ const router = express.Router();
 const homeController = require("../controllers/home.controller");
 const {
   formularioNuevaVacante,
+  agregarVacante,
 } = require("../controllers/vacantes.controller");
 
 module.exports = () => {
@@ -10,6 +11,7 @@ module.exports = () => {
 
   // Crear Vacantes.
   router.get("/vacantes/nueva", formularioNuevaVacante);
+  router.post("/vacantes/nueva", agregarVacante);
 
   return router;
 };
