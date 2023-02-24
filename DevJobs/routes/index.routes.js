@@ -9,6 +9,12 @@ const {
   editarVacante,
 } = require("../controllers/vacantes.controller");
 
+const {
+  formCrearCuenta,
+  validarRegistro,
+  crearUsuario,
+} = require("../controllers/usuarios.controller");
+
 module.exports = () => {
   router.get("/", mostrarTrabajos);
 
@@ -22,6 +28,10 @@ module.exports = () => {
   // Editar vacante.
   router.get("/vacantes/editar/:url", formEditarVacante);
   router.post("/vacantes/editar/:url", editarVacante);
+
+  // Crear cuentas
+  router.get("/crear-cuenta", formCrearCuenta);
+  router.post("/crear-cuenta", validarRegistro, crearUsuario);
 
   return router;
 };
