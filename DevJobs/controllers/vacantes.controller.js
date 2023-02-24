@@ -13,8 +13,12 @@ const agregarVacante = async (req, res) => {
   const vacante = new Vacante(req.body);
 
   // Crear arreglo de skills.
-  const nuevo = req.body.skills.split(",");
-  vacante.skills = nuevo;
+  const nuevos = req.body.skills.split(",");
+  const skillsSeparados = nuevos.map((nuevo) => {
+    return nuevo.trim();
+  });
+
+  vacante.skills = skillsSeparados;
 
   // Alamacenar en la DB.
   const nuevaVacante = await vacante.save();
@@ -37,4 +41,42 @@ const mostrarVacante = async (req, res, next) => {
   });
 };
 
-module.exports = { formularioNuevaVacante, agregarVacante, mostrarVacante };
+const formEditarVacante = async (req, res, next) => {
+  const vacante = await Vacante.findOne({ url: req.params.url });
+
+  if (!vacante) return next();
+
+  res.render("editarVacante", {
+    vacante,
+    nombrePagina: `Editar - ${vacante.titulo}`,
+  });
+};
+
+const editarVacante = async (req, res, next) => {
+  const vacanteActualizada = req.body;
+  vacanteActualizada.skills = req.body.skills.split(",");
+  const skillsSeparados = vacanteActualizada.skills.map((nuevo) => {
+    return nuevo.trim();
+  });
+  vacanteActualizada.skills = skillsSeparados;
+  console.log(vacanteActualizada);
+
+  const vacante = await Vacante.findOneAndUpdate(
+    { url: req.params.url },
+    vacanteActualizada,
+    {
+      new: true,
+      runValidators: true,
+    }
+  );
+
+  res.redirect(`/vacantes/${vacante.url}`);
+};
+
+module.exports = {
+  formularioNuevaVacante,
+  agregarVacante,
+  mostrarVacante,
+  formEditarVacante,
+  editarVacante,
+};

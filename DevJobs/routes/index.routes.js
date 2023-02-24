@@ -5,6 +5,8 @@ const {
   formularioNuevaVacante,
   agregarVacante,
   mostrarVacante,
+  formEditarVacante,
+  editarVacante,
 } = require("../controllers/vacantes.controller");
 
 module.exports = () => {
@@ -16,6 +18,10 @@ module.exports = () => {
 
   // Mostrar vacante.
   router.get("/vacantes/:url", mostrarVacante);
+
+  // Editar vacante.
+  router.get("/vacantes/editar/:url", formEditarVacante);
+  router.post("/vacantes/editar/:url", editarVacante);
 
   return router;
 };
