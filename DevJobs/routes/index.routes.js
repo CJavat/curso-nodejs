@@ -7,6 +7,7 @@ const {
   mostrarVacante,
   formEditarVacante,
   editarVacante,
+  validarVacante,
 } = require("../controllers/vacantes.controller");
 
 const {
@@ -14,12 +15,16 @@ const {
   validarRegistro,
   crearUsuario,
   formIniciarSesion,
+  formEditarPerfil,
+  editarPerfil,
+  validarPerfil,
 } = require("../controllers/usuarios.controller");
 
 const {
   autenticarUsuario,
   verificarUsuario,
   mostrarPanel,
+  cerrarSesion,
 } = require("../controllers/auth.controller");
 
 module.exports = () => {
@@ -27,14 +32,24 @@ module.exports = () => {
 
   // Crear Vacantes.
   router.get("/vacantes/nueva", verificarUsuario, formularioNuevaVacante);
-  router.post("/vacantes/nueva", verificarUsuario, agregarVacante);
+  router.post(
+    "/vacantes/nueva",
+    verificarUsuario,
+    validarVacante,
+    agregarVacante
+  );
 
   // Mostrar vacante.
   router.get("/vacantes/:url", mostrarVacante);
 
   // Editar vacante.
   router.get("/vacantes/editar/:url", verificarUsuario, formEditarVacante);
-  router.post("/vacantes/editar/:url", verificarUsuario, editarVacante);
+  router.post(
+    "/vacantes/editar/:url",
+    verificarUsuario,
+    validarVacante,
+    editarVacante
+  );
 
   // Crear cuentas
   router.get("/crear-cuenta", formCrearCuenta);
@@ -44,8 +59,15 @@ module.exports = () => {
   router.get("/iniciar-sesion", formIniciarSesion);
   router.post("/iniciar-sesion", autenticarUsuario);
 
+  // Cerrar Sesión.
+  router.get("/cerrar-sesion", cerrarSesion);
+
   // Panel de administración.
   router.get("/administracion", verificarUsuario, mostrarPanel);
+
+  // Editar Perfil.
+  router.get("/editar-perfil", verificarUsuario, formEditarPerfil);
+  router.post("/editar-perfil", verificarUsuario, validarPerfil, editarPerfil);
 
   return router;
 };
