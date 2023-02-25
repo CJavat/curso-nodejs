@@ -1,0 +1,4 @@
+2023-02-25 00:12:38.952 [warning] Via 'product.json#extensionEnabledApiProposals' extension 'github.vscode-pull-request-github' wants API proposal 'commentsResolvedState' but that proposal DOES NOT EXIST. Likely, the proposal has been finalized (check 'vscode.d.ts') or was abandoned.
+2023-02-25 00:12:39.251 [info] Started initializing default profile extensions in extensions installation folder. file:///root/.vscode/extensions
+2023-02-25 00:12:39.578 [info] Completed initializing default profile extensions in extensions installation folder. file:///root/.vscode/extensions
+2023-02-25 00:12:42.306 [info] [perf] Render performance baseline is 47ms
