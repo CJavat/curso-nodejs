@@ -59,8 +59,16 @@ const crearUsuario = async (req, res, next) => {
   }
 };
 
+// Formulario para iniciar sesión.
+const formIniciarSesion = (req, res) => {
+  res.render("iniciar-sesion", {
+    nombrePagina: "Iniciar sesión, devJobs",
+  });
+};
+
 module.exports = {
   formCrearCuenta,
   validarRegistro,
   crearUsuario,
+  formIniciarSesion,
 };

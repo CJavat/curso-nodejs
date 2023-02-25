@@ -13,7 +13,10 @@ const {
   formCrearCuenta,
   validarRegistro,
   crearUsuario,
+  formIniciarSesion,
 } = require("../controllers/usuarios.controller");
+
+const { autenticarUsuario } = require("../controllers/auth.controller");
 
 module.exports = () => {
   router.get("/", mostrarTrabajos);
@@ -32,6 +35,10 @@ module.exports = () => {
   // Crear cuentas
   router.get("/crear-cuenta", formCrearCuenta);
   router.post("/crear-cuenta", validarRegistro, crearUsuario);
+
+  // Autenticar Usuarios.
+  router.get("/iniciar-sesion", formIniciarSesion);
+  router.post("/iniciar-sesion", autenticarUsuario);
 
   return router;
 };
