@@ -117,6 +117,29 @@ const validarVacante = (req, res, next) => {
   next();
 };
 
+// Eliminar vacante.
+const eliminarVacante = async (req, res, next) => {
+  const { id } = req.params;
+  const vacante = await Vacante.findById(id);
+
+  if (verificarAutor(vacante, req.user)) {
+    // Todo bien, si es el usuario, eliminar.
+    vacante.remove();
+    res.status(200).send("Vacante eliminada correctamente");
+  } else {
+    // No permitido.
+    res.status(403).send("Error");
+  }
+};
+
+const verificarAutor = (vacante = {}, usuario = {}) => {
+  if (!vacante.autor.equals(usuario._id)) {
+    return false;
+  } else {
+    return true;
+  }
+};
+
 module.exports = {
   formularioNuevaVacante,
   agregarVacante,
@@ -124,4 +147,5 @@ module.exports = {
   formEditarVacante,
   editarVacante,
   validarVacante,
+  eliminarVacante,
 };

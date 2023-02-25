@@ -7,6 +7,7 @@ const {
   mostrarVacante,
   formEditarVacante,
   editarVacante,
+  eliminarVacante,
   validarVacante,
 } = require("../controllers/vacantes.controller");
 
@@ -50,6 +51,9 @@ module.exports = () => {
     validarVacante,
     editarVacante
   );
+
+  // Eliminar vacante.
+  router.delete("/vacantes/eliminar/:id", eliminarVacante);
 
   // Crear cuentas
   router.get("/crear-cuenta", formCrearCuenta);
