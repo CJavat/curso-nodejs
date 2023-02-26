@@ -9,6 +9,9 @@ const {
   editarVacante,
   eliminarVacante,
   validarVacante,
+  subirCV,
+  contactar,
+  mostrarCandidatos,
 } = require("../controllers/vacantes.controller");
 
 const {
@@ -79,6 +82,12 @@ module.exports = () => {
     subirImagen,
     editarPerfil
   );
+
+  // Recibir Mensajes de Candidatos.
+  router.post("/vacantes/:url", subirCV, contactar);
+
+  // Muestra los candidatos por vacante.
+  router.get("/candidatos/:id", verificarUsuario, mostrarCandidatos);
 
   return router;
 };
