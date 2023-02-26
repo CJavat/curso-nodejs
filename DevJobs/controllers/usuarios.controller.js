@@ -1,5 +1,51 @@
 const mongoose = require("mongoose");
+const multer = require("multer");
 const Usuarios = mongoose.model("Usuarios");
+const shortId = require("shortid");
+
+const subirImagen = (req, res, next) => {
+  upload(req, res, function (error) {
+    if (error) {
+      if (error instanceof multer.MulterError) {
+        if (error.code === "LIMIT_FILE_SIZE") {
+          req.flash("error", "El archivo es muy grande: Máximo 100kb");
+        } else {
+          req.flash("error", error.message);
+        }
+      } else {
+        req.flash("error", error.message);
+      }
+      res.redirect("/administracion");
+      return;
+    } else {
+      next();
+    }
+  });
+};
+
+// Opciones de Multer.
+const configuracionMulter = {
+  limits: { fileSize: 100000 },
+  storage: (fileStorage = multer.diskStorage({
+    destination: (req, file, cb) => {
+      cb(null, __dirname + "../../public/uploads/perfiles"); //Si no funciona, quitar un '../'
+    },
+    filename: (req, file, cb) => {
+      const extension = file.mimetype.split("/")[1];
+      cb(null, `${shortId.generate()}.${extension}`);
+    },
+  })),
+  fileFilter: (req, file, cb) => {
+    if (file.mimetype === "image/jpeg" || file.mimetype === "image/png") {
+      // El callback se ejecuta como true o false:  true cuando la imagen se acepta.
+      cb(null, true);
+    } else {
+      cb(new Error("Formato No Válido"), false);
+    }
+  },
+};
+
+const upload = multer(configuracionMulter).single("imagen");
 
 const formCrearCuenta = (req, res) => {
   res.render("crear-cuenta", {
@@ -72,7 +118,8 @@ const formEditarPerfil = (req, res) => {
     nombrePagina: "Editar tu perfil en devJobs",
     usuario: req.user,
     cerrarSesion: true,
-    usuario: req.user,
+    nombre: req.user.nombre,
+    imagen: req.user.imagen,
   });
 };
 
@@ -84,6 +131,10 @@ const editarPerfil = async (req, res) => {
   usuario.email = req.body.email;
   if (req.body.password) {
     usuario.password = req.body.password;
+  }
+
+  if (req.file) {
+    usuario.imagen = req.file.filename;
   }
 
   await usuario.save();
@@ -120,6 +171,7 @@ const validarPerfil = (req, res, next) => {
       usuario: req.user,
       cerrarSesion: true,
       nombre: req.user.nombre,
+      imagen: req.user.imagen,
       mensajes: req.flash(),
     });
     return;
@@ -135,4 +187,5 @@ module.exports = {
   formEditarPerfil,
   editarPerfil,
   validarPerfil,
+  subirImagen,
 };

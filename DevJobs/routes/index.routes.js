@@ -19,6 +19,7 @@ const {
   formEditarPerfil,
   editarPerfil,
   validarPerfil,
+  subirImagen,
 } = require("../controllers/usuarios.controller");
 
 const {
@@ -71,7 +72,13 @@ module.exports = () => {
 
   // Editar Perfil.
   router.get("/editar-perfil", verificarUsuario, formEditarPerfil);
-  router.post("/editar-perfil", verificarUsuario, validarPerfil, editarPerfil);
+  router.post(
+    "/editar-perfil",
+    verificarUsuario,
+    /*validarPerfil,*/
+    subirImagen,
+    editarPerfil
+  );
 
   return router;
 };
