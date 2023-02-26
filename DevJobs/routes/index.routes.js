@@ -30,6 +30,10 @@ const {
   verificarUsuario,
   mostrarPanel,
   cerrarSesion,
+  formResetearPassword,
+  enviarToken,
+  reestablecerPassword,
+  guardarPassword,
 } = require("../controllers/auth.controller");
 
 module.exports = () => {
@@ -69,6 +73,14 @@ module.exports = () => {
 
   // Cerrar Sesión.
   router.get("/cerrar-sesion", cerrarSesion);
+
+  // Resetear password.
+  router.get("/reestablecer-password", formResetearPassword);
+  router.post("/reestablecer-password", enviarToken);
+
+  // Resetear password (Almacenar en la DB.)
+  router.get("/reestablecer-password/:token", reestablecerPassword);
+  router.post("/reestablecer-password/:token", guardarPassword);
 
   // Panel de administración.
   router.get("/administracion", verificarUsuario, mostrarPanel);
