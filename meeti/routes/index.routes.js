@@ -1,14 +1,16 @@
 const express = require("express");
 const router = express.Router();
 
-module.exports = function () {
-  router.get("/", (req, res) => {
-    res.render("home");
-  });
+//! CONTROLLERS
+const { home } = require("../controllers/home.controller");
 
-  router.get("/crear-cuenta", (req, res) => {
-    res.render("crear-cuenta");
-  });
+const { formCrearCuenta } = require("../controllers/usuariosController");
+
+//* ENDPOINTS
+module.exports = function () {
+  router.get("/", home);
+
+  router.get("/crear-cuenta", formCrearCuenta);
 
   return router;
 };
