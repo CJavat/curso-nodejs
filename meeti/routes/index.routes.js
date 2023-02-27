@@ -19,5 +19,6 @@ module.exports = function () {
 
   // Iniciar Sesión.
   router.get("/iniciar-sesion", formIniciarSesion);
+  // router.post("/iniciar-sesion", );
   return router;
 };
