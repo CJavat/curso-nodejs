@@ -22,18 +22,13 @@ const crearNuevaCuenta = async (req, res) => {
       url,
       subject: "Confirma tu cuenta de Meeti",
       archivo: "confirmar-cuenta",
+      secure: true,
     });
 
-    req.flash("Exito", "Hemos enviado un email, confirma tu cuenta.");
+    console.log("Exito", "Hemos enviado un email, confirma tu cuenta.");
     res.redirect("/iniciar-sesion");
   } catch (error) {
-    let erroresSequelize = error.errors.map((err) => err.message);
-
-    if (erroresSequelize.length === 0)
-      erroresSequelize = parseInt(erroresSequelize);
-
-    console.log(erroresSequelize);
-    req.flash("error", erroresSequelize);
+    console.log(error);
     res.redirect("/crear-cuenta");
   }
 };
