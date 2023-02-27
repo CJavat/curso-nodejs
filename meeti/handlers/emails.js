@@ -12,3 +12,5 @@ let transport = nodemailer.createTransport({
     pass: emailConfig.pass,
   },
 });
+
+exports.enviarEmail = async (opcinoes) => {};
