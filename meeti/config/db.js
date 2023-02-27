@@ -1,6 +1,7 @@
 const Sequelize = require("sequelize");
 
-module.exports = new Sequelize("meeti", "postgres", "root", {
+//module.exports = new Sequelize("meeti", "postgres", "root", {
+module.exports = new Sequelize("meeti", "admin", "root", {
   host: "127.0.0.1",
   port: "5432",
   dialect: "postgres",
