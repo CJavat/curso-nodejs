@@ -12,6 +12,7 @@ const {
   subirCV,
   contactar,
   mostrarCandidatos,
+  buscarVacantes,
 } = require("../controllers/vacantes.controller");
 
 const {
@@ -100,6 +101,9 @@ module.exports = () => {
 
   // Muestra los candidatos por vacante.
   router.get("/candidatos/:id", verificarUsuario, mostrarCandidatos);
+
+  // Buscador de Vacantes.
+  router.post("/buscador", buscarVacantes);
 
   return router;
 };

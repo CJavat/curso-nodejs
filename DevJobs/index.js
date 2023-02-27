@@ -15,6 +15,7 @@ const bodyParser = require("body-parser");
 const expressValidator = require("express-validator");
 const flash = require("connect-flash");
 const passport = require("./config/passport");
+const createError = require("http-errors");
 
 require("dotenv").config({ path: "variables.env" });
 
@@ -68,4 +69,25 @@ app.use((req, res, next) => {
 
 app.use("/", router());
 
-app.listen(process.env.PUERTO);
+// 404 página no existente.
+app.use((req, res, next) => {
+  next(createError(404, "No Encontrado"));
+});
+
+// Administración de los errores.
+app.use((error, req, res, next) => {
+  const status = error.status || 500;
+  res.locals.mensaje = error.message;
+  res.locals.status = status;
+
+  res.status(status);
+  res.render("error");
+});
+
+// Dejar que Heroku asigne el puerto.
+const host = "0.0.0.0";
+const port = process.env.PORT;
+
+app.listen(port, host, () => {
+  console.log(`Servidor corriendo en http://${host}:${port} y funcionando.`);
+});
