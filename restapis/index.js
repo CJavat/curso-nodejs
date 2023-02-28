@@ -1,6 +1,7 @@
 const express = require("express");
 const routes = require("./routes/index.routes");
 const mongoose = require("mongoose");
+const bodyParser = require("body-parser");
 
 // Conectar Mongo.
 mongoose.Promise = global.Promise;
@@ -12,6 +13,11 @@ mongoose.connect(
 );
 // Crear el servidor
 const app = express();
+
+// Habilitar BodyParser.
+app.use(bodyParser.json());
+false;
+app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use("/", routes());
 
