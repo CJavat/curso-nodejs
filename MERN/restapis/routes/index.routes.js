@@ -15,6 +15,7 @@ const {
   mostrarProducto,
   actualizarProducto,
   eliminarProducto,
+  buscarProducto,
 } = require("../controllers/productos.controller");
 
 const {
@@ -56,6 +57,9 @@ module.exports = function () {
 
   // Eliminar un producto.
   router.delete("/productos/:idProducto", eliminarProducto);
+
+  // Busqueda de productos.
+  router.post("/productos/busqueda/:query", buscarProducto);
 
   //! PEDIDOS-----------------------
   // Agrega nuevos pedidos.

@@ -15,6 +15,7 @@ import NuevoProducto from "./components/Productos/NuevoProducto";
 import EditarProducto from "./components/Productos/EditarProducto";
 
 import Pedidos from "./components/Pedidos/Pedidos";
+import NuevoPedido from "./components/Pedidos/NuevoPedido";
 
 function App() {
   return (
@@ -41,6 +42,7 @@ function App() {
                 />
 
                 <Route path="/pedidos" element={<Pedidos />} />
+                <Route path="/pedidos/nuevo/:id" element={<NuevoPedido />} />
               </Route>
             </Routes>
           </main>

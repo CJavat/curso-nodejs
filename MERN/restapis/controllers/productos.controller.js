@@ -115,6 +115,22 @@ const eliminarProducto = async (req, res, next) => {
   }
 };
 
+// Buscar un producto.
+const buscarProducto = async (req, res, next) => {
+  try {
+    // Obtener el query.
+    const { query } = req.params;
+    const producto = await Productos.find({
+      nombre: new RegExp(query, "i"),
+    });
+
+    res.json(producto);
+  } catch (error) {
+    console.log(error);
+    next();
+  }
+};
+
 module.exports = {
   nuevoProducto,
   subirArchivo,
@@ -122,4 +138,5 @@ module.exports = {
   mostrarProducto,
   actualizarProducto,
   eliminarProducto,
+  buscarProducto,
 };
