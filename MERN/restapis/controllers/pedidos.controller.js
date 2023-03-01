@@ -79,6 +79,7 @@ const eliminarPedido = async (req, res, next) => {
     res.json({ mensaje: "El pedido se ha eliminado." });
   } catch (error) {
     console.log(error);
+    next();
   }
 };
 

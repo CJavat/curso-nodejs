@@ -1,6 +1,6 @@
 const Clientes = require("../models/clientes.model");
 
-const nuevoCliente = async (req, res) => {
+const nuevoCliente = async (req, res, next) => {
   const cliente = new Clientes(req.body);
 
   try {
@@ -11,13 +11,13 @@ const nuevoCliente = async (req, res) => {
     res.status(200).json({ mensaje: "Se agregó un nuevo cliente" });
   } catch (error) {
     // Si hay un error...
-    console.error(error);
+    res.send(error);
     next();
   }
 };
 
 // Muestra todos los clientes.
-const mostrarClientes = async (req, res) => {
+const mostrarClientes = async (req, res, next) => {
   try {
     // Obtener todos los clientes.
     const clientes = await Clientes.find();
@@ -32,7 +32,7 @@ const mostrarClientes = async (req, res) => {
 };
 
 // Muestra un cliente por su ID.
-const mostrarCliente = async (req, res) => {
+const mostrarCliente = async (req, res, next) => {
   const cliente = await Clientes.findById(req.params.idCliente);
 
   if (!cliente) {
@@ -45,7 +45,7 @@ const mostrarCliente = async (req, res) => {
 };
 
 // Actualizar un cliente.
-const actualizarCliente = async (req, res) => {
+const actualizarCliente = async (req, res, next) => {
   try {
     const cliente = await Clientes.findByIdAndUpdate(
       { _id: req.params.idCliente },
@@ -62,7 +62,7 @@ const actualizarCliente = async (req, res) => {
 };
 
 // Eliminar cliente por su id.
-const eliminarCliente = async (req, res) => {
+const eliminarCliente = async (req, res, next) => {
   try {
     await Clientes.findByIdAndDelete({ _id: req.params.idCliente });
 

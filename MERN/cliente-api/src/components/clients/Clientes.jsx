@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 
 // Importar Cliente Axios.
@@ -9,20 +10,25 @@ const Clientes = () => {
   // Trabajar con el state.
   const [clientes, setClientes] = useState([]);
 
-  // Query a la API.
-  const consultarAPI = async () => {
-    const clientesConsulta = await clienteAxios.get("/clientes");
-
-    setClientes(clientesConsulta.data);
-  };
-
   useEffect(() => {
+    // Query a la API.
+    const consultarAPI = async () => {
+      const clientesConsulta = await clienteAxios.get("/clientes");
+
+      setClientes(clientesConsulta.data);
+    };
+
     consultarAPI();
-  }, []);
+  }, [clientes]);
 
   return (
     <>
       <h2>Clientes</h2>
+
+      <Link to="/clientes/nuevo" className="btn btn-verde nvo-cliente">
+        <i className="fas fa-plus-circle"></i>
+        Nuevo Cliente
+      </Link>
 
       <ul className="listado-clientes">
         {clientes.map((cliente) => (

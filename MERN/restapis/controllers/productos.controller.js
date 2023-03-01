@@ -78,7 +78,7 @@ const mostrarProducto = async (req, res, next) => {
 };
 
 // Actualiza un producto vía ID.
-const actualizarProducto = async (req, res) => {
+const actualizarProducto = async (req, res, next) => {
   try {
     // Construir un nuevo producto.
     let nuevoProducto = req.body;
