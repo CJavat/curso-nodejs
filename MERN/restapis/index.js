@@ -27,6 +27,9 @@ app.use(cors());
 
 app.use("/", routes());
 
+// Carpeta publica.
+app.use(express.static("uploads"));
+
 // Puerto
 app.listen(3030, () => {
   console.log("Conectado al servidor en el puerto: 3030");
