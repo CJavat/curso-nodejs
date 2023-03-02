@@ -26,13 +26,21 @@ const {
   eliminarPedido,
 } = require("../controllers/pedidos.controller");
 
+const {
+  registrarUSuario,
+  autenticarUSuario,
+} = require("../controllers/usuarios.controller");
+
+//* MIDDLEWARE para proteger las rutas.
+const auth = require("../middlewares/auth");
+
 module.exports = function () {
   //! CLIENTES-----------------------
   // Agregar nuevos clientes via POST.
   router.post("/clientes", nuevoCliente);
 
   // Obtener todos los clientes.
-  router.get("/clientes", mostrarClientes);
+  router.get("/clientes", auth, mostrarClientes);
 
   // Obtener un cliente.
   router.get("/clientes/:idCliente", mostrarCliente);
@@ -76,6 +84,11 @@ module.exports = function () {
 
   // Eliminar pedido.
   router.delete("/pedidos/:idPedido", eliminarPedido);
+
+  //! CREAR CUENTAS-----------------------
+  router.post("/crear-cuenta", registrarUSuario);
+
+  router.post("/iniciar-sesion", autenticarUSuario);
 
   return router;
 };
