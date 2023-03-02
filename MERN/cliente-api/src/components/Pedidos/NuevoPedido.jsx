@@ -4,14 +4,20 @@ import clienteAxios from "../../config/axios";
 import Swal from "sweetalert2";
 
 import FormBuscarProducto from "./FormBuscarProducto";
+import FormCantidadProducto from "./FormCantidadProducto";
 
 const NuevoPedido = () => {
   // Extraer ID.
   const { id } = useParams();
 
+  // Redirección.
+  const navigate = useNavigate();
+
   // State.
   const [cliente, setCliente] = useState({});
   const [busqueda, setBusqueda] = useState("");
+  const [productos, setProductos] = useState([]);
+  const [total, setTotal] = useState(0);
 
   useEffect(() => {
     // Obtener el cliente.
@@ -23,7 +29,10 @@ const NuevoPedido = () => {
     };
 
     consultarAPI();
-  }, []);
+
+    // Actualizar el total.
+    actualizarTotal();
+  }, [productos]);
 
   const buscarProducto = async (e) => {
     e.preventDefault();
@@ -36,7 +45,14 @@ const NuevoPedido = () => {
 
     // Si no hay resultados, una alerta, sino, agregarlo.
     if (resultadoBusqueda.data[0]) {
-      console.log(resultadoBusqueda.data);
+      let productoResultado = resultadoBusqueda.data[0];
+
+      // Agregar la llave "producto" (es la copia de id)
+      productoResultado.producto = resultadoBusqueda.data[0]._id;
+      productoResultado.cantidad = 0;
+
+      // Ponerlo en el state.
+      setProductos([...productos, productoResultado]);
     } else {
       // No hay resultados.
       Swal.fire({
@@ -50,6 +66,92 @@ const NuevoPedido = () => {
   // Almacenar una busqueda en el State
   const leerDatosBusqueda = (e) => {
     setBusqueda(e.target.value);
+  };
+
+  // Actualizar la cantidad de productos.
+  const restarProductos = (i) => {
+    // Copiar el arreglo original.
+    const todosProductos = [...productos];
+
+    // Validar que solo quede a minimo 0.
+    if (todosProductos[i].cantidad === 0) return;
+
+    // Decremento
+    todosProductos[i].cantidad--;
+
+    // Almacenarlo en el state.
+    setProductos(todosProductos);
+  };
+
+  const aumentarProductos = (i) => {
+    // Copiar el arreglo original.
+    const todosProductos = [...productos];
+
+    // Incremento.
+    todosProductos[i].cantidad++;
+
+    // Almacenarlo en el state.
+    setProductos(todosProductos);
+  };
+
+  // Elimina un producto del state.
+  const elimiarProductoPedido = (id) => {
+    const todosProductos = productos.filter(
+      (producto) => producto.producto !== id
+    );
+    setProductos(todosProductos);
+  };
+
+  // Actualizar el total a pagar.
+  const actualizarTotal = () => {
+    // Si el arreglo de productos es igual a 0: el total es 0.
+    if (productos.length === 0) {
+      setTotal(0);
+      return;
+    }
+
+    // Calcular el nuevo total.
+    let nuevoTotal = 0;
+
+    // Recorrer todos los productos, sus cantidades y precios.
+    productos.map(
+      (producto) => (nuevoTotal += producto.cantidad * producto.precio)
+    );
+
+    // Almacenar el nuevo total.
+    setTotal(nuevoTotal);
+  };
+
+  // Almacena el pedido en la DB.
+  const realizarPedido = async (e) => {
+    e.preventDefault();
+
+    // Construir el objeto.
+    const pedido = {
+      cliente: id,
+      productos: productos,
+      total: total,
+    };
+
+    // Realizar la petición.
+    const resultado = await clienteAxios.post(`/pedidos/nuevo/${id}`, pedido);
+
+    // Si la petición es exitosa, se muestra un mensaje de exito.
+    if (resultado.status === 200) {
+      Swal.fire({
+        icon: "success",
+        title: "Correcto",
+        text: resultado.data.mensaje,
+      });
+    } else {
+      Swal.fire({
+        icon: "error",
+        title: "Error al realizar pedido",
+        text: "Vuelve a Intentarlo",
+      });
+    }
+
+    navigate("/");
   };
 
   return (
@@ -70,70 +172,31 @@ const NuevoPedido = () => {
       />
 
       <ul className="resumen">
-        <li>
-          <div className="texto-producto">
-            <p className="nombre">Macbook Pro</p>
-            <p className="precio">$250</p>
-          </div>
-          <div className="acciones">
-            <div className="contenedor-cantidad">
-              <i className="fas fa-minus"></i>
-              <input type="text" name="cantidad" />
-              <i className="fas fa-plus"></i>
-            </div>
-            <button type="button" className="btn btn-rojo">
-              <i className="fas fa-minus-circle"></i>
-              Eliminar Producto
-            </button>
-          </div>
-        </li>
-        <li>
-          <div className="texto-producto">
-            <p className="nombre">Macbook Pro</p>
-            <p className="precio">$250</p>
-          </div>
-          <div className="acciones">
-            <div className="contenedor-cantidad">
-              <i className="fas fa-minus"></i>
-              <input type="text" name="cantidad" />
-              <i className="fas fa-plus"></i>
-            </div>
-            <button type="button" className="btn btn-rojo">
-              <i className="fas fa-minus-circle"></i>
-              Eliminar Producto
-            </button>
-          </div>
-        </li>
-        <li>
-          <div className="texto-producto">
-            <p className="nombre">Macbook Pro</p>
-            <p className="precio">$250</p>
-          </div>
-          <div className="acciones">
-            <div className="contenedor-cantidad">
-              <i className="fas fa-minus"></i>
-              <input type="text" name="cantidad" />
-              <i className="fas fa-plus"></i>
-            </div>
-            <button type="button" className="btn btn-rojo">
-              <i className="fas fa-minus-circle"></i>
-              Eliminar Producto
-            </button>
-          </div>
-        </li>
+        {productos.map((producto, index) => (
+          <FormCantidadProducto
+            key={producto.producto}
+            index={index}
+            producto={producto}
+            restarProductos={restarProductos}
+            aumentarProductos={aumentarProductos}
+            elimiarProductoPedido={elimiarProductoPedido}
+          />
+        ))}
       </ul>
-      <div className="campo">
-        <label>Total:</label>
-        <input
-          type="number"
-          name="precio"
-          placeholder="Precio"
-          readonly="readonly"
-        />
-      </div>
-      <div className="enviar">
-        <input type="submit" className="btn btn-azul" value="Agregar Pedido" />
-      </div>
+
+      <p className="total">
+        Total a Pagar: <span className="">${total}</span>
+      </p>
+
+      {total > 0 ? (
+        <form onSubmit={realizarPedido}>
+          <input
+            type="submit"
+            className="btn btn-verde btn-block"
+            value="Realizar Pedido"
+          />
+        </form>
+      ) : null}
     </>
   );
 };
