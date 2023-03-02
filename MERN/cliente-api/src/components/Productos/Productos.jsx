@@ -1,20 +1,32 @@
-import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useState, useContext } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import clienteAxios from "../../config/axios";
+
+import { CRMContext } from "../../context/CRMContext";
 
 import Producto from "./Producto";
 
 const Productos = () => {
+  const navigate = useNavigate();
+  const [auth, setAuth] = useContext(CRMContext);
   const [productos, setProductos] = useState([]);
 
   useEffect(() => {
-    // Query a la API.
-    const consultarAPI = async () => {
-      const productosConsulta = await clienteAxios.get("/productos");
-      setProductos(productosConsulta.data);
-    };
+    if (!auth.token !== "") {
+      // Query a la API.
+      const consultarAPI = async () => {
+        const productosConsulta = await clienteAxios.get("/productos", {
+          headers: {
+            Authorization: `Bearer ${auth.token}`,
+          },
+        });
+        setProductos(productosConsulta.data);
+      };
 
-    consultarAPI();
+      consultarAPI();
+    } else {
+      navigate("/iniciar-sesion");
+    }
   }, [productos]);
 
   return (

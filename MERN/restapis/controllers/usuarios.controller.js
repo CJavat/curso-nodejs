@@ -34,7 +34,7 @@ const autenticarUSuario = async (req, res, next) => {
   } else {
     // Password correcto, firmar el token.
     const token = jwt.sign(
-      { email: usuario.email, nombre: usuario.nombre, _id: usuario.id },
+      { email: usuario.email, nombre: usuario.nombre, id: usuario.id },
       "LLAVESUPERSECRETA",
       {
         expiresIn: "1h",

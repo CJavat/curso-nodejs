@@ -1,32 +1,23 @@
 const jwt = require("jsonwebtoken");
 
 module.exports = (req, res, next) => {
-  // Autorización por el Header.
-  const authHeader = req.get("Authorization");
-
-  if (!authHeader) {
-    const error = new Error("No autenticado, no hay JWT");
-    error.statusCode = 401;
-    throw error;
+  const { authorization } = req.headers;
+  let token = null;
+  // si hay un token en el header
+  if (authorization && authorization?.startsWith("Bearer")) {
+    try {
+      token = authorization.split(" ")[1];
+      const decored = jwt.verify(token, "LLAVESUPERSECRETA");
+      return next();
+    } catch (e) {
+      const error = new Error("Token no válido");
+      return res.status(403).json({ msg: error.message });
+    }
   }
 
-  // Obtener el token y verificarlo.
-  const token = authHeader.split("")[1];
-  let revisarToken;
-  try {
-    //! REVISAR ÉSTE ERROR. jwf malformed.
-    revisarToken = jwt.verify(token, "LLAVESUPERSECRETA");
-    console.log(revisarToken);
-  } catch (error) {
-    error.statusCode = 500;
-    throw error;
-  }
-
-  // Si es un token válido pero hay un error...
-  if (!revisarToken) {
-    const error = new Error("No Autenticado");
-    error.statusCode = 401;
-    throw error;
+  if (!token) {
+    const error = new Error("Token requerido");
+    return res.status(403).json({ msg: error.message });
   }
 
   next();

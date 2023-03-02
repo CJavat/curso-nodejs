@@ -36,11 +36,11 @@ const Login = () => {
       );
 
       // Extrare el token.
-      const { token } = respuesta.data;
-      localStorage.setItem("token", token);
+      const tokenValido = respuesta.data.token;
+      localStorage.setItem("token", tokenValido);
 
       // Colocar el token en el state.
-      setAuth({ token, auth: true });
+      setAuth({ token: tokenValido, auth: true });
 
       Swal.fire({
         icon: "success",
@@ -55,7 +55,7 @@ const Login = () => {
       Swal.fire({
         icon: "error",
         title: "Hubo un error",
-        text: error.respuesta.data.mensaje,
+        text: error.response.data.mensaje,
       });
     }
   };

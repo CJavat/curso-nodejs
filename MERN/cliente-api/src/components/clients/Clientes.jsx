@@ -28,7 +28,6 @@ const Clientes = () => {
               Authorization: `Bearer ${auth.token}`,
             },
           });
-
           setClientes(clientesConsulta.data);
         };
         consultarAPI();

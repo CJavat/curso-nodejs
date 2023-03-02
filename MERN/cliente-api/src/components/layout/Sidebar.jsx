@@ -1,6 +1,13 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useContext } from "react";
+import { CRMContext } from "../../context/CRMContext";
 
 const Sidebar = () => {
+  const navigate = useNavigate();
+  const [auth, setAuth] = useContext(CRMContext);
+
+  if (!auth.auth) return;
+
   return (
     <aside className="sidebar col-3">
       <h2>Administración</h2>

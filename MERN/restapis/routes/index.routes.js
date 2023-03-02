@@ -37,53 +37,53 @@ const auth = require("../middlewares/auth");
 module.exports = function () {
   //! CLIENTES-----------------------
   // Agregar nuevos clientes via POST.
-  router.post("/clientes", nuevoCliente);
+  router.post("/clientes", auth, nuevoCliente);
 
   // Obtener todos los clientes.
   router.get("/clientes", auth, mostrarClientes);
 
   // Obtener un cliente.
-  router.get("/clientes/:idCliente", mostrarCliente);
+  router.get("/clientes/:idCliente", auth, mostrarCliente);
 
   // Actualizar Cliente.
-  router.put("/clientes/:idCliente", actualizarCliente);
+  router.put("/clientes/:idCliente", auth, actualizarCliente);
 
   // Eliminar Cliente.
-  router.delete("/clientes/:idCliente", eliminarCliente);
+  router.delete("/clientes/:idCliente", auth, eliminarCliente);
 
   //! PRODUCTOS-----------------------
-  router.post("/productos", subirArchivo, nuevoProducto);
+  router.post("/productos", auth, subirArchivo, nuevoProducto);
 
   // Muestra todos los productos.
-  router.get("/productos", mostrarProductos);
+  router.get("/productos", auth, mostrarProductos);
 
   // Muestra un producto por su ID.
-  router.get("/productos/:idProducto", mostrarProducto);
+  router.get("/productos/:idProducto", auth, mostrarProducto);
 
   // Actualizar un producto.
-  router.put("/productos/:idProducto", subirArchivo, actualizarProducto);
+  router.put("/productos/:idProducto", auth, subirArchivo, actualizarProducto);
 
   // Eliminar un producto.
-  router.delete("/productos/:idProducto", eliminarProducto);
+  router.delete("/productos/:idProducto", auth, eliminarProducto);
 
   // Busqueda de productos.
-  router.post("/productos/busqueda/:query", buscarProducto);
+  router.post("/productos/busqueda/:query", auth, buscarProducto);
 
   //! PEDIDOS-----------------------
   // Agrega nuevos pedidos.
-  router.post("/pedidos/nuevo/:idUsuario", nuevoPedido);
+  router.post("/pedidos/nuevo/:idUsuario", auth, nuevoPedido);
 
   // Mostrat todos los pedidos
-  router.get("/pedidos", mostrarPedidos);
+  router.get("/pedidos", auth, mostrarPedidos);
 
   // Mostrar un pedido por su ID.
-  router.get("/pedidos/:idPedido", mostrarPedido);
+  router.get("/pedidos/:idPedido", auth, mostrarPedido);
 
   // Actualizar pedidos.
-  router.put("/pedidos/:idPedido", actualizarPedido);
+  router.put("/pedidos/:idPedido", auth, actualizarPedido);
 
   // Eliminar pedido.
-  router.delete("/pedidos/:idPedido", eliminarPedido);
+  router.delete("/pedidos/:idPedido", auth, eliminarPedido);
 
   //! CREAR CUENTAS-----------------------
   router.post("/crear-cuenta", registrarUSuario);
